@@ -25,7 +25,7 @@ const NavItems = () => {
                 </Link>
             ))}
         </nav>
-    )
+    );
 };
 
 export default NavItems;
