@@ -12,7 +12,6 @@ const SearchInput = () => {
     const searchParams = useSearchParams()
     const query = searchParams.get("topic") || ""
 
-
     useEffect(() => {
         const delayDebounceFn = setTimeout(() => {
             if(searchQuery) {

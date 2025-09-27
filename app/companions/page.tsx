@@ -7,7 +7,7 @@ import SubjectFilter from "@/components/SubjectFilter";
 
 const CompanionsPage = async ({searchParams}: SearchParams) => {
 
-    const filters = await searchParams
+    const filters = await searchParams;
 
     const subject = filters.subject ? filters.subject : ""
     const topic = filters.topic ? filters.topic : ""
@@ -30,7 +30,7 @@ const CompanionsPage = async ({searchParams}: SearchParams) => {
                     <CompanionCards key={companions.id} {...companions} color={getSubjectColor(companions.subject)}/>
                 ))}
             </section>
-            Companions Library
+
         </main>
     );
 };
