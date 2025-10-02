@@ -13,7 +13,8 @@ export const createCompanion = async (formData: CreateCompanion) => {
 
 export const getAllCompanions = async ({limit = 10, page = 1, subject, topic}: GetAllCompanions) => {
     const supabase = createSupabaseClinet()
-    let query = supabase.from("companions").select()
+    let query = supabase.from("companions").select().
+    order("created_at", {ascending: false})
 
     if (subject && topic) {
         query = query.ilike("subject", `%${subject}%`).or(`topic.ilike.%${topic}%,name.ilike.%${topic}%`)
