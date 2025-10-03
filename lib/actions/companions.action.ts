@@ -13,8 +13,7 @@ export const createCompanion = async (formData: CreateCompanion) => {
 
 export const getAllCompanions = async ({limit = 10, page = 1, subject, topic}: GetAllCompanions) => {
     const supabase = createSupabaseClinet()
-    let query = supabase.from("companions").select().
-    order("created_at", {ascending: false})
+    let query = supabase.from("companions").select().order("created_at", {ascending: false})
 
     if (subject && topic) {
         query = query.ilike("subject", `%${subject}%`).or(`topic.ilike.%${topic}%,name.ilike.%${topic}%`)
@@ -37,4 +36,36 @@ export const getCompanion = async (id: string) => {
     if (error) return console.log(error)
 
     return data[0]
+}
+
+export const addToSessionHistory = async (companionId: string) => {
+    const {userId} = await auth()
+    if (!userId) return
+    const supabase = createSupabaseClinet()
+    const {data, error} = await supabase.from("session_history").insert({
+        companion_id: companionId,
+        user_id: userId
+    }).select()
+    if (error) throw new Error(error.message)
+    return data;
+}
+
+export const getRecentSessionHistory = async (limit: 10) => {
+    const supabase = createSupabaseClinet()
+    const {
+        data,
+        error
+    } = await supabase.from("session_history").select(`companions:companion_id (*)`).order("created_at", {ascending: false}).limit(limit)
+    if (error) throw new Error(error.message)
+    return data?.map(({companions}) => companions);
+}
+
+export const getUserSessions = async (userId: string, limit: 10) => {
+    const supabase = createSupabaseClinet()
+    const {
+        data,
+        error
+    } = await supabase.from("session_history").select(`companions:companion_id (*)`).eq("user_id", userId).order("created_at", {ascending: false}).limit(limit)
+    if (error) throw new Error(error.message)
+    return data?.map(({companions}) => companions);
 }
