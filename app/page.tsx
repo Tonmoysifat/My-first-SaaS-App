@@ -3,8 +3,12 @@ import CompanionCards from "@/components/CompanionCards";
 import CompanionsList from "@/components/CompanionsList";
 import CTA from "@/components/CTA";
 import {recentSessions} from "@/constants";
+import {getAllCompanions, getRecentSessionHistory} from "@/lib/actions/companions.action";
+import {getSubjectColor} from "@/lib/utils";
 
-const Page = () => {
+const Page = async () => {
+    const companions = await getAllCompanions({limit: 3});
+    const recentSessionsCompanions = await getRecentSessionHistory(10);
     return (
         <main>
             {/*<h1 className="text-2xl underline">*/}
@@ -12,42 +16,23 @@ const Page = () => {
                 Popular Companions
             </h1>
             <section className="home-section">
-                <CompanionCards
-                    id="123"
-                    name="Neura the Brainy Explorer"
-                    topic="Neural Network of the Brain"
-                    subject="Sicence"
-                    duration={45}
-                    color="#E5D0FF"
+                {
+                    companions?.map((companions) => (
+                        <CompanionCards
+                            key={companions.id}
+                            {...companions}
+                            color={getSubjectColor(companions.subject)}
 
-                />
-
-                <CompanionCards
-                    id="456"
-                    name="Countsy the Number Wizard"
-                    topic="Derivatives & Integrals"
-                    subject="Maths"
-                    duration={30}
-                    color="#FFDA6E"
-
-                />
-
-                <CompanionCards
-                    id="789"
-                    name="Verba the Vocabulary Builder"
-                    topic="English Literature"
-                    subject="Language"
-                    duration={445}
-                    color="#BDE7FF"
-
-                />
+                        />
+                    ))
+                }
             </section>
 
             <section className="home-section">
                 <CompanionsList
-                title="Recently Completed Lessons"
-                companions={recentSessions}
-                classNames="w-2/3 max-lg:w-full"
+                    title="Recently Completed Lessons"
+                    companions={recentSessionsCompanions}
+                    classNames="w-2/3 max-lg:w-full"
                 />
                 <CTA/>
             </section>
@@ -56,10 +41,6 @@ const Page = () => {
 };
 
 export default Page;
-
-
-
-
 
 
 // NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_cHJvbW90ZWQtcG9ueS0yLmNsZXJrLmFjY291bnRzLmRldiQ
